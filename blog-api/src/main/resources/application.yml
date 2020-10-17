@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: blog-api
+      username: root
+      password: example
+      authentication-database: admin
