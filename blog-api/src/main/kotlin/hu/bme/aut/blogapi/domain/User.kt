@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.core.index.Indexed
 import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
-data class User(@Id var id: String?,
+data class User(@Id var id: String? = null,
                 @Indexed var username: String,
-                var email: String,
-                val posts: List<Post> = emptyList())
+                var email: String)
