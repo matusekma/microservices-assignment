@@ -11,4 +11,4 @@ data class Post(@Id var id: String? = null,
                 @Indexed var title: String,
                 var content: String,
                 var createdAt: LocalDateTime,
-                @DBRef var user: User)
+                var userId: String)

@@ -24,8 +24,8 @@ class UserServiceImpl(val userRepository: UserRepository, val postRepository: Po
     }
 
     override fun createPostForUser(userId: String, createPostRequest: CreatePostRequest): CreatePostResponse {
-        val user = userRepository.findById(userId).orElseThrow { throw EntityNotFoundException("User not found.") }
-        val post = createPostRequest.toPost(user)
+        userRepository.findById(userId).orElseThrow { throw EntityNotFoundException("User not found.") }
+        val post = createPostRequest.toPost(userId)
         return postRepository.insert(post).toCreatePostResponse()
     }
 
