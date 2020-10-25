@@ -10,6 +10,14 @@ fun User.toCreateUserResponse(): CreateUserResponse {
     )
 }
 
+fun User.toUserResponse(): UserResponse {
+    return UserResponse(
+            id = this.id!!,
+            username = username,
+            email = email
+    )
+}
+
 fun CreateUserRequest.toUser(): User {
     return User(
             username = username,
