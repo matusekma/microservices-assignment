@@ -6,4 +6,7 @@ import org.springframework.data.mongodb.core.mapping.Document
 import java.time.LocalDate
 
 @Document
-data class Post(@Id var id: String? = null, @Indexed var title: String, var content: String, var createdAt: LocalDate)
+data class Post(@Id var id: String? = null,
+                @Indexed var title: String,
+                var content: String,
+                var createdAt: LocalDate)
