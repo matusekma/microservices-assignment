@@ -8,7 +8,7 @@ import hu.bme.aut.blogapi.feature.users.dto.UserResponse
 import org.springframework.data.domain.Sort
 
 interface UserService {
-    fun findAllUsersSorted(sort: Sort? = Sort.by(Sort.Direction.ASC, "username")): List<UserResponse>
+    fun findAllUsersSorted(sort: Sort? = Sort.by(Sort.Direction.DESC, "username")): List<UserResponse>
     fun createUser(createUserRequest: CreateUserRequest): CreateUserResponse
     fun createPostForUser(userId: String, createPostRequest: CreatePostRequest): CreatePostResponse
 }
