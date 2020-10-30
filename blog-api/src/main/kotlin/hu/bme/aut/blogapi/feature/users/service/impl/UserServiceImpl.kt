@@ -11,22 +11,31 @@ import hu.bme.aut.blogapi.repository.PostRepository
 import hu.bme.aut.blogapi.repository.UserRepository
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserServiceImpl(val userRepository: UserRepository, val postRepository: PostRepository) : UserService {
 
-    override fun findAllUsersSorted(sort: Sort?): List<UserResponse> {
-        return userRepository.findAll(sort!!).map { user -> user.toUserResponse() }
+    override fun findAllUsersSorted(sort: Sort): List<UserResponse> {
+        return userRepository.findAll(sort).map { it.toUserResponse() }
     }
 
-    override fun createUser(createUserRequest: CreateUserRequest): CreateUserResponse {
-        return userRepository.insert(createUserRequest.toUser()).toCreateUserResponse()
+    override fun createUser(createUserRequest: CreateUserRequest): UserResponse =
+            userRepository.insert(createUserRequest.toUser())
+                    .toUserResponse()
+
+    @Transactional
+    override fun updateUser(userId: String, updateUserRequest: UpdateUserRequest): UserResponse {
+        val user = userRepository.findById(userId).orElseThrow { throw EntityNotFoundException("User not found.") }
+        user.username = updateUserRequest.username
+        return userRepository.save(user).toUserResponse()
     }
 
-    override fun createPostForUser(userId: String, createPostRequest: CreatePostRequest): CreatePostResponse {
-        userRepository.findById(userId).orElseThrow { throw EntityNotFoundException("User not found.") }
-        val post = createPostRequest.toPost(userId)
-        return postRepository.insert(post).toCreatePostResponse()
-    }
+    override fun findUserById(userId: String): UserResponse =
+            userRepository.findById(userId)
+                    .orElseThrow { throw EntityNotFoundException("User not found.") }.toUserResponse()
 
+    override fun deleteUserById(userId: String) {
+        userRepository.deleteById(userId)
+    }
 }
