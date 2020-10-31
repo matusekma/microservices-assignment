@@ -1,7 +1,5 @@
 package hu.bme.aut.blogapi.feature.users.controller
 
-import hu.bme.aut.blogapi.feature.posts.dto.CreatePostRequest
-import hu.bme.aut.blogapi.feature.posts.dto.CreatePostResponse
 import hu.bme.aut.blogapi.feature.users.dto.CreateUserRequest
 import hu.bme.aut.blogapi.feature.users.dto.UpdateUserRequest
 import hu.bme.aut.blogapi.feature.users.dto.UserResponse

@@ -1,20 +1,21 @@
 package hu.bme.aut.blogapi.feature.users.service.impl
 
+import hu.bme.aut.blogapi.domain.User
 import hu.bme.aut.blogapi.exception.EntityNotFoundException
-import hu.bme.aut.blogapi.feature.posts.dto.CreatePostRequest
-import hu.bme.aut.blogapi.feature.posts.dto.CreatePostResponse
-import hu.bme.aut.blogapi.feature.posts.dto.toPost
-import hu.bme.aut.blogapi.feature.posts.dto.toCreatePostResponse
 import hu.bme.aut.blogapi.feature.users.dto.*
 import hu.bme.aut.blogapi.feature.users.service.UserService
 import hu.bme.aut.blogapi.repository.PostRepository
 import hu.bme.aut.blogapi.repository.UserRepository
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Service
-import org.springframework.transaction.annotation.Transactional
 
 @Service
-class UserServiceImpl(val userRepository: UserRepository, val postRepository: PostRepository) : UserService {
+class UserServiceImpl(val userRepository: UserRepository) : UserService {
+
+    private fun findUserByIdOrThrow(id: String): User =
+            userRepository.findById(id)
+                    .orElseThrow { throw EntityNotFoundException("User not found.") }
+
 
     override fun findAllUsersSorted(sort: Sort): List<UserResponse> {
         return userRepository.findAll(sort).map { it.toUserResponse() }
@@ -24,18 +25,16 @@ class UserServiceImpl(val userRepository: UserRepository, val postRepository: Po
             userRepository.insert(createUserRequest.toUser())
                     .toUserResponse()
 
-    @Transactional
-    override fun updateUser(userId: String, updateUserRequest: UpdateUserRequest): UserResponse {
-        val user = userRepository.findById(userId).orElseThrow { throw EntityNotFoundException("User not found.") }
+    override fun updateUser(id: String, updateUserRequest: UpdateUserRequest): UserResponse {
+        val user = userRepository.findById(id).orElseThrow { throw EntityNotFoundException("User with id $id not found.") }
         user.username = updateUserRequest.username
         return userRepository.save(user).toUserResponse()
     }
 
-    override fun findUserById(userId: String): UserResponse =
-            userRepository.findById(userId)
-                    .orElseThrow { throw EntityNotFoundException("User not found.") }.toUserResponse()
+    override fun findUserById(id: String): UserResponse =
+            findUserByIdOrThrow(id).toUserResponse()
 
-    override fun deleteUserById(userId: String) {
-        userRepository.deleteById(userId)
+    override fun deleteUserById(id: String) {
+        userRepository.deleteById(id)
     }
 }
