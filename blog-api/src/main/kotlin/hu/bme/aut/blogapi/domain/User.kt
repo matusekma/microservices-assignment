@@ -6,5 +6,5 @@ import org.springframework.data.mongodb.core.mapping.Document
 
 @Document
 data class User(@Id var id: String? = null,
-                @Indexed var username: String,
-                var email: String)
+                @Indexed(name = "username_index") var username: String,
+                @Indexed(name = "email_index", unique = true) var email: String)
