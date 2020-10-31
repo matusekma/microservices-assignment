@@ -8,7 +8,10 @@ fun Post.toCreatePostResponse(): CreatePostResponse {
             id = this.id!!,
             title = this.title,
             content = this.content,
-            createdAt = this.createdAt
+            createdAt = this.createdAt,
+            updatedAt = this.updatedAt,
+            isArchived = this.isArchived,
+            userId = userId
     )
 }
 
@@ -17,15 +20,20 @@ fun Post.toPostResponse(): PostResponse {
             id = this.id!!,
             title = this.title,
             content = this.content,
-            createdAt = this.createdAt
+            createdAt = this.createdAt,
+            updatedAt = this.updatedAt,
+            isArchived = this.isArchived,
+            userId = this.userId
     )
 }
 
 fun CreatePostRequest.toPost(userId: String): Post {
     return Post(
-            title = title,
-            content = content,
+            title = this.title,
+            content = this.content,
             createdAt = LocalDateTime.now(),
+            updatedAt = LocalDateTime.now(),
+            isArchived = false,
             userId = userId
     )
 }

@@ -1,12 +1,19 @@
 package hu.bme.aut.blogapi.feature.posts.service
 
+import hu.bme.aut.blogapi.feature.posts.dto.CreatePostRequest
 import hu.bme.aut.blogapi.feature.posts.dto.CreatePostResponse
 import hu.bme.aut.blogapi.feature.posts.dto.PostResponse
+import hu.bme.aut.blogapi.feature.posts.dto.UpdatePostRequest
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 
 interface PostService {
-    fun getPostById(postId: String): CreatePostResponse
-    fun findAllPostsByUserPaged(userId: String, pageable: Pageable): Page<PostResponse>
+    fun getPostById(id: String): CreatePostResponse
+    fun findAllPostsByUserPaged(userId: String, isArchived: Boolean, pageable: Pageable): Page<PostResponse>
+    fun findAllPostsPaged(isArchived: Boolean, pageable: Pageable): Page<PostResponse>
+    fun createPostForUser(userId: String, createPostRequest: CreatePostRequest): CreatePostResponse
+    fun deletePostById(id: String)
+    fun updatePost(id: String, updatePostRequest: UpdatePostRequest): PostResponse
+    fun toggleIsArchivedForPost(id: String): PostResponse
 }

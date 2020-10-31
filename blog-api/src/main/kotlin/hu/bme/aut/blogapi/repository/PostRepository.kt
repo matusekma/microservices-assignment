@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 interface PostRepository : MongoRepository<Post, String> {
-    fun findAllByUserId(userId: String, pageable: Pageable): Page<Post>
+    fun findAllByUserIdAndIsArchivedIs(userId: String, isArchived: Boolean, pageable: Pageable): Page<Post>
+    fun findAllByIsArchivedIs(isArchived: Boolean, pageable: Pageable): Page<Post>
 }
 
