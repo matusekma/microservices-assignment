@@ -2,11 +2,9 @@ package hu.bme.aut.blogapi.feature.posts.service.impl
 
 import hu.bme.aut.blogapi.domain.Post
 import hu.bme.aut.blogapi.exception.EntityNotFoundException
+import hu.bme.aut.blogapi.feature.posts.*
 import hu.bme.aut.blogapi.feature.posts.dto.PostResponse
-import hu.bme.aut.blogapi.feature.posts.getMockPost
-import hu.bme.aut.blogapi.feature.posts.getMockUpdatePostRequest
-import hu.bme.aut.blogapi.feature.posts.getMockUpdatePostRequestWithoutIsArchived
-import hu.bme.aut.blogapi.feature.posts.mockId
+import hu.bme.aut.blogapi.feature.posts.dto.toPost
 import hu.bme.aut.blogapi.feature.posts.service.PostService
 import hu.bme.aut.blogapi.repository.PostRepository
 import hu.bme.aut.blogapi.repository.UserRepository
@@ -137,6 +135,25 @@ class PostServiceTest {
         assertEquals(exception.message, "Post with id $mockId not found.")
     }
 
+    @Test
+    internal fun `test post creation`() {
+        val mockCreatePostRequest = getMockCreatePostRequest()
+        val mockUserId = "456"
+        val mockPostToBeInserted = mockCreatePostRequest.toPost(mockUserId)
+        Mockito.`when`(userRepository.existsById(mockUserId)).thenReturn(true)
+        Mockito.`when`(postRepository.insert(any(Post::class.java)))
+                .thenReturn(mockPostToBeInserted.copy(id = mockId))
+
+        val createPostResponse = postService.createPostForUser(mockUserId, mockCreatePostRequest)
+
+        verify(postRepository).insert(any(Post::class.java))
+        assertEquals(mockCreatePostRequest.title, createPostResponse.title)
+        assertEquals(mockCreatePostRequest.content, createPostResponse.content)
+        assertEquals(mockId, createPostResponse.id)
+        assertEquals(mockUserId, createPostResponse.userId)
+        assertEquals(false, createPostResponse.isArchived)
+    }
+
     private fun assertPostResponse(expected: Post, actual: PostResponse) {
         assertEquals(expected.id, actual.id)
         assertEquals(expected.content, actual.content)
@@ -145,5 +162,4 @@ class PostServiceTest {
         assertEquals(expected.isArchived, actual.isArchived)
         assertEquals(expected.userId, actual.userId)
     }
-
 }
