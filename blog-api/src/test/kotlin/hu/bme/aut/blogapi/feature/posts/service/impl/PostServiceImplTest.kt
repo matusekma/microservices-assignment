@@ -37,7 +37,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun `test post returned by id successfully`() {
+    internal fun `test post returned by id successfully`() {
         val mockPost = getMockPost()
         Mockito.`when`(postRepository.findById(mockId)).thenReturn(Optional.of(mockPost))
 
@@ -48,7 +48,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun `test all posts returned by id paged`() {
+    internal fun `test all posts returned by id paged`() {
         val mockPost = getMockPost()
         val mockPost1 = mockPost.copy(id = "124")
         val mockPage = PageImpl(listOf(mockPost, mockPost1))
@@ -63,7 +63,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun `test all posts returned by id paged per user`() {
+    internal fun `test all posts returned by id paged per user`() {
         val mockPost = getMockPost()
         val mockPost1 = mockPost.copy(id = "124")
         val mockPage = PageImpl(listOf(mockPost, mockPost1))
@@ -78,7 +78,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun `test changing isArchived property of post`() {
+    internal fun `test changing isArchived property of post`() {
         val mockPost = getMockPost()
         val originalPost = mockPost.copy()
         Mockito.`when`(postRepository.findById(mockId)).thenReturn(Optional.of(mockPost))
@@ -93,7 +93,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun `test updating post without modifying isArchived`() {
+    internal fun `test updating post without modifying isArchived`() {
         val mockPost = getMockPost()
         val originalPost = mockPost.copy()
         val mockUpdatePostRequest = getMockUpdatePostRequestWithoutIsArchived()
@@ -111,7 +111,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun `test updating post with modifying isArchived`() {
+    internal fun `test updating post with modifying isArchived`() {
         val mockPost = getMockPost()
         val originalPost = mockPost.copy()
         val mockUpdatePostRequest = getMockUpdatePostRequest()
@@ -129,7 +129,7 @@ class PostServiceTest {
     }
 
     @Test
-    fun `test post not found`() {
+    internal fun `test post not found`() {
         Mockito.`when`(postRepository.findById(mockId)).thenReturn(Optional.empty())
 
         val exception = assertThrows<EntityNotFoundException> { postService.getPostById(mockId) }

@@ -14,11 +14,11 @@ import java.time.LocalDateTime
 class PostServiceImpl(val postRepository: PostRepository,
                       val userRepository: UserRepository) : PostService {
 
-    private fun findPostById(id: String) =
+    private fun findPostByIdOrThrow(id: String) =
             postRepository.findById(id).orElseThrow { throw EntityNotFoundException("Post with id $id not found.") }
 
     override fun getPostById(id: String): PostResponse {
-        return findPostById(id).toPostResponse()
+        return findPostByIdOrThrow(id).toPostResponse()
     }
 
     override fun findAllPostsByUserPaged(userId: String, isArchived: Boolean, pageable: Pageable): Page<PostResponse> {
@@ -44,7 +44,7 @@ class PostServiceImpl(val postRepository: PostRepository,
     }
 
     override fun toggleIsArchivedForPost(id: String): PostResponse {
-        val post = findPostById(id)
+        val post = findPostByIdOrThrow(id)
         post.apply {
             isArchived = !isArchived
             updatedAt = LocalDateTime.now()
@@ -53,7 +53,7 @@ class PostServiceImpl(val postRepository: PostRepository,
     }
 
     override fun updatePost(id: String, updatePostRequest: UpdatePostRequest): PostResponse {
-        val post = findPostById(id)
+        val post = findPostByIdOrThrow(id)
         post.apply {
             isArchived = updatePostRequest.isArchived ?: this.isArchived
             title = updatePostRequest.title
