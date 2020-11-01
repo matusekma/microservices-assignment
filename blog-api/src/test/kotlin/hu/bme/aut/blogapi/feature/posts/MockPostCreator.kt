@@ -1,4 +1,4 @@
-package hu.bme.aut.blogapi.feature.user
+package hu.bme.aut.blogapi.feature.posts
 
 import hu.bme.aut.blogapi.domain.Post
 import hu.bme.aut.blogapi.feature.posts.dto.UpdatePostRequest

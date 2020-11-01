@@ -1,14 +1,13 @@
-package hu.bme.aut.blogapi.feature.user.service.impl
+package hu.bme.aut.blogapi.feature.posts.service.impl
 
 import hu.bme.aut.blogapi.domain.Post
 import hu.bme.aut.blogapi.exception.EntityNotFoundException
 import hu.bme.aut.blogapi.feature.posts.dto.PostResponse
+import hu.bme.aut.blogapi.feature.posts.getMockPost
+import hu.bme.aut.blogapi.feature.posts.getMockUpdatePostRequest
+import hu.bme.aut.blogapi.feature.posts.getMockUpdatePostRequestWithoutIsArchived
+import hu.bme.aut.blogapi.feature.posts.mockId
 import hu.bme.aut.blogapi.feature.posts.service.PostService
-import hu.bme.aut.blogapi.feature.posts.service.impl.PostServiceImpl
-import hu.bme.aut.blogapi.feature.user.getMockPost
-import hu.bme.aut.blogapi.feature.user.getMockUpdatePostRequest
-import hu.bme.aut.blogapi.feature.user.getMockUpdatePostRequestWithoutIsArchived
-import hu.bme.aut.blogapi.feature.user.mockId
 import hu.bme.aut.blogapi.repository.PostRepository
 import hu.bme.aut.blogapi.repository.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
