@@ -27,7 +27,8 @@ class PostServiceImpl(val postRepository: PostRepository,
     }
 
     override fun findAllPostsPaged(isArchived: Boolean, pageable: Pageable): Page<PostResponse> {
-        return postRepository.findAllByIsArchivedIs(isArchived, pageable).map { it.toPostResponse() }
+        return postRepository.findAllByIsArchivedIs(isArchived, pageable)
+                .map { it.toPostResponse() }
     }
 
     override fun createPostForUser(userId: String, createPostRequest: CreatePostRequest): CreatePostResponse {
