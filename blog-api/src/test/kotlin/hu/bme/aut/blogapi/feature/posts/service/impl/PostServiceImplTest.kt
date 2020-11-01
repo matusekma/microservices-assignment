@@ -46,6 +46,13 @@ class PostServiceTest {
     }
 
     @Test
+    internal fun `test post delete`() {
+        postService.deletePostById(mockId)
+
+        verify(postRepository).deleteById(mockId)
+    }
+
+    @Test
     internal fun `test all posts returned by id paged`() {
         val mockPost = getMockPost()
         val mockPost1 = mockPost.copy(id = "124")
