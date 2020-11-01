@@ -16,3 +16,5 @@ Run the following command in the blog-api folder:
 ``./gradlew clean test``  
 JaCoCo test coverage can be inspected in the following folder:  
 ``kotlin-blog-api\blog-api\build\reports\jacoco\test\html``
+
+[Github repo](https://github.com/matusekma/kotlin-blog-api)
