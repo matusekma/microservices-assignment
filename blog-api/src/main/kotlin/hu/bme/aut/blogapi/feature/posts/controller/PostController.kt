@@ -21,7 +21,7 @@ class PostController(val postService: PostService) {
     }
 
     @GetMapping("/{id}")
-    fun getPost(@PathVariable id: String): CreatePostResponse {
+    fun getPost(@PathVariable id: String): PostResponse {
         return postService.getPostById(id)
     }
 

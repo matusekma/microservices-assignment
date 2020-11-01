@@ -17,8 +17,8 @@ class PostServiceImpl(val postRepository: PostRepository,
     private fun findPostById(id: String) =
             postRepository.findById(id).orElseThrow { throw EntityNotFoundException("Post with id $id not found.") }
 
-    override fun getPostById(id: String): CreatePostResponse {
-        return findPostById(id).toCreatePostResponse()
+    override fun getPostById(id: String): PostResponse {
+        return findPostById(id).toPostResponse()
     }
 
     override fun findAllPostsByUserPaged(userId: String, isArchived: Boolean, pageable: Pageable): Page<PostResponse> {
