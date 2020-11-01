@@ -14,7 +14,7 @@ class UserServiceImpl(val userRepository: UserRepository) : UserService {
 
     private fun findUserByIdOrThrow(id: String): User =
             userRepository.findById(id)
-                    .orElseThrow { throw EntityNotFoundException("User not found.") }
+                    .orElseThrow { throw EntityNotFoundException("User with id $id not found.") }
 
 
     override fun findAllUsersSorted(sort: Sort): List<UserResponse> {
@@ -26,7 +26,7 @@ class UserServiceImpl(val userRepository: UserRepository) : UserService {
                     .toUserResponse()
 
     override fun updateUser(id: String, updateUserRequest: UpdateUserRequest): UserResponse {
-        val user = userRepository.findById(id).orElseThrow { throw EntityNotFoundException("User with id $id not found.") }
+        val user = findUserByIdOrThrow(id)
         user.username = updateUserRequest.username
         return userRepository.save(user).toUserResponse()
     }
