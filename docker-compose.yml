@@ -1,0 +1,45 @@
+version: '3.1'
+
+services:
+
+  mongo:
+    image: mongo
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    volumes:
+      - blog-api-mongo-data:/data/db
+    command: --quiet
+    networks:
+      - blog_network
+
+  blog-api:
+    build: blog-api
+    ports:
+      - 8080:8080
+    environment: 
+      DB_HOST: mongo
+      PROFANITY_SERVICE_URL: http://profanity-filter:80
+    depends_on: 
+      - mongo
+    networks:
+      - blog_network
+
+  profanity-filter:
+    build: flask-api
+    ports:
+      - 5000:80
+    depends_on: 
+      - blog-api
+    networks:
+      - blog_network
+
+volumes: # The volumes will store the database data; kept even after the containers are deleted
+  blog-api-mongo-data:
+    driver: local
+networks:
+  blog_network:
+    driver: bridge
