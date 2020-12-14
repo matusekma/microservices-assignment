@@ -6,6 +6,7 @@ import hu.bme.aut.blogapi.feature.posts.*
 import hu.bme.aut.blogapi.feature.posts.dto.PostResponse
 import hu.bme.aut.blogapi.feature.posts.dto.toPost
 import hu.bme.aut.blogapi.feature.posts.service.PostService
+import hu.bme.aut.blogapi.feature.posts.service.ProfanityFilterService
 import hu.bme.aut.blogapi.repository.PostRepository
 import hu.bme.aut.blogapi.repository.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -14,9 +15,9 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.any
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.Mockito
-import org.mockito.Mockito.mock
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import java.util.*
@@ -24,6 +25,7 @@ import java.util.*
 class PostServiceTest {
 
     private lateinit var postService: PostService
+    private lateinit var profanityFilterService: ProfanityFilterService
     private lateinit var postRepository: PostRepository
     private lateinit var userRepository: UserRepository
 
@@ -31,7 +33,9 @@ class PostServiceTest {
     internal fun setUp() {
         postRepository = mock(PostRepository::class.java)
         userRepository = mock(UserRepository::class.java)
-        postService = PostServiceImpl(postRepository, userRepository)
+        profanityFilterService = mock(ProfanityFilterServiceImpl::class.java)
+        `when`(profanityFilterService.filter(anyString())).thenAnswer { it.arguments[0] }
+        postService = PostServiceImpl(postRepository, userRepository, profanityFilterService)
     }
 
     @Test
