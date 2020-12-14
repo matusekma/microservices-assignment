@@ -36,7 +36,7 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-      - name: Build Java APU with Maven
+      - name: Build Java API with Maven
         working-directory: ./user-api
         run: mvn clean install spring-boot:repackage
       - name: Build docker-compose

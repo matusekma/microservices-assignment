@@ -19,8 +19,8 @@ services:
 
   post-api:
     build: blog-api
-    # ports:
-    #   - 8080:8080
+    ports:
+      - 8081:8080
     environment: 
       DB_HOST: mongo
       PROFANITY_SERVICE_URL: http://profanity-filter:80
@@ -32,7 +32,8 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.posts.rule=PathPrefix(`/api/posts`)"
       - "traefik.http.services.post-api.loadbalancer.server.port=8080"
-      - "traefik.http.middlewares.posts-auth.forwardauth.address=http://user-api/api/auth" # Forward authentication middleware definition
+      - "traefik.http.middlewares.posts-auth.forwardauth.address=http://user-api:8080/api/auth" # Forward authentication middleware definition
+      - "traefik.http.middlewares.posts-auth.forwardauth.trustForwardHeader=true"
       - "traefik.http.routers.posts.middlewares=posts-auth@docker" # Use the auth middleware in the /api/users route
 
   user-api:
@@ -41,15 +42,19 @@ services:
       JDBC_DATABASE_URL: jdbc:postgresql://postgres-db:5432/postgres
       JDBC_DATABASE_USERNAME: postgres
       JDBC_DATABASE_PASSWORD: example
+    ports:
+      - 8080:8080
     depends_on: 
       - postgres-db
     networks: 
       - blog_network
     labels:
       - "traefik.enable=true"
+      - "traefik.http.routers.auth.rule=PathPrefix(`/api/auth`)"
       - "traefik.http.routers.users.rule=PathPrefix(`/api/users`)"
       - "traefik.http.services.user-api.loadbalancer.server.port=8080"
-      - "traefik.http.middlewares.users-auth.forwardauth.address=http://user-api/api/auth"
+      - "traefik.http.middlewares.users-auth.forwardauth.address=http://user-api:8080/api/auth"
+      - "traefik.http.middlewares.users-auth.forwardauth.trustForwardHeader=true"
       - "traefik.http.routers.users.middlewares=users-auth@docker"
 
   profanity-filter:
