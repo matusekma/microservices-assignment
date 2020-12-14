@@ -1,7 +1,7 @@
 spring:
   data:
     mongodb:
-      host: localhost
+      host: ${DB_HOST}
       port: 27017
       database: blog-api
       username: root
@@ -11,3 +11,5 @@ spring:
 logging:
   level:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
+profanity-filter:
+  baseUrl: ${PROFANITY_SERVICE_URL}
