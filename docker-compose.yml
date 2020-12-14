@@ -2,6 +2,65 @@ version: '3.1'
 
 services:
 
+  apigateway:
+    image: traefik:v2.2.1
+    ports:
+      - "5080:80" # Port of the API Gateway, which will be the port behind which the system will be published
+      - "5088:8080" # Dashboard of Traefik for troubleshooting
+    command:
+      - "--api.insecure=true"
+      - "--api.dashboard=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock # So that Traefik can listen to the Docker events (see .env file for Windows workaround to make this work)
+    networks:
+      - blog_network
+
+  post-api:
+    build: blog-api
+    # ports:
+    #   - 8080:8080
+    environment: 
+      DB_HOST: mongo
+      PROFANITY_SERVICE_URL: http://profanity-filter:80
+    depends_on: 
+      - mongo
+    networks:
+      - blog_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.posts.rule=PathPrefix(`/api/posts`)"
+      - "traefik.http.services.post-api.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.posts-auth.forwardauth.address=http://user-api/api/auth" # Forward authentication middleware definition
+      - "traefik.http.routers.posts.middlewares=posts-auth@docker" # Use the auth middleware in the /api/users route
+
+  user-api:
+    build: user-api
+    environment: 
+      JDBC_DATABASE_URL: jdbc:postgresql://postgres-db:5432/postgres
+      JDBC_DATABASE_USERNAME: postgres
+      JDBC_DATABASE_PASSWORD: example
+    depends_on: 
+      - postgres-db
+    networks: 
+      - blog_network
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.users.rule=PathPrefix(`/api/users`)"
+      - "traefik.http.services.user-api.loadbalancer.server.port=8080"
+      - "traefik.http.middlewares.users-auth.forwardauth.address=http://user-api/api/auth"
+      - "traefik.http.routers.users.middlewares=users-auth@docker"
+
+  profanity-filter:
+    build: flask-api
+    ports:
+      - 5000:80
+    depends_on: 
+      - post-api
+    networks:
+      - blog_network
+
   postgres-db:
     image: postgres
     restart: always
@@ -15,43 +74,14 @@ services:
   mongo:
     image: mongo
     restart: always
-    ports:
-      - 27017:27017
+    #ports:
+      #- 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: example
     volumes:
       - blog-api-mongo-data:/data/db
     command: --quiet
-    networks:
-      - blog_network
-
-  blog-api:
-    build: blog-api
-    ports:
-      - 8080:8080
-    environment: 
-      DB_HOST: mongo
-      PROFANITY_SERVICE_URL: http://profanity-filter:80
-    depends_on: 
-      - mongo
-    networks:
-      - blog_network
-
-  user-api:
-    build: user-api
-    ports:
-      - 8081:8080
-    depends_on: postgres-db
-    networks: 
-      - blog_network
-
-  profanity-filter:
-    build: flask-api
-    ports:
-      - 5000:80
-    depends_on: 
-      - blog-api
     networks:
       - blog_network
 
