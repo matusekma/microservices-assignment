@@ -61,8 +61,8 @@ class PostServiceImpl(val postRepository: PostRepository,
         val post = findPostByIdOrThrow(id)
         post.apply {
             isArchived = updatePostRequest.isArchived ?: this.isArchived
-            title = profanityFilterService.filter(title)
-            content = profanityFilterService.filter(content)
+            title = profanityFilterService.filter(updatePostRequest.title)
+            content = profanityFilterService.filter(updatePostRequest.content)
             updatedAt = LocalDateTime.now()
         }
         return postRepository.save(post).toPostResponse()
