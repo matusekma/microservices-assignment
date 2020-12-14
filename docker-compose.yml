@@ -2,6 +2,16 @@ version: '3.1'
 
 services:
 
+  postgres-db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+    ports:
+      - 5432:5432
+    networks:
+      - blog_network
+
   mongo:
     image: mongo
     restart: always
@@ -26,6 +36,14 @@ services:
     depends_on: 
       - mongo
     networks:
+      - blog_network
+
+  user-api:
+    build: user-api
+    ports:
+      - 8081:8080
+    depends_on: postgres-db
+    networks: 
       - blog_network
 
   profanity-filter:
