@@ -47,6 +47,8 @@ class UserServiceImpl implements UserService {
 
 
     public void deleteUserById(int id) {
-        userRepository.deleteById(id);
+        if (userRepository.existsById(id)) {
+            userRepository.deleteById(id);
+        }
     }
 }
