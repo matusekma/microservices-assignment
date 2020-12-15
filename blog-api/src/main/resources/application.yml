@@ -13,3 +13,5 @@ logging:
     org.springframework.data.mongodb.core.MongoTemplate: DEBUG
 profanity-filter:
   baseUrl: ${PROFANITY_SERVICE_URL}
+userservice:
+  baseUrl: ${USER_SERVICE_URL}

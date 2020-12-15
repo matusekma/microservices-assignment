@@ -26,12 +26,12 @@ class PostController(val postService: PostService) {
     }
 
     @GetMapping("/users/{userId}")
-    fun getPostsOfUserPaged(@PathVariable userId: String, @Param(value = "isArchived") isArchived: Boolean = false, pageable: Pageable): Page<PostResponse> {
+    fun getPostsOfUserPaged(@PathVariable userId: Int, @Param(value = "isArchived") isArchived: Boolean = false, pageable: Pageable): Page<PostResponse> {
         return postService.findAllPostsByUserPaged(userId, isArchived, pageable)
     }
 
     @PostMapping("/users/{userId}")
-    fun postPostForUser(@PathVariable userId: String, @RequestBody createPostRequest: CreatePostRequest): CreatePostResponse {
+    fun postPostForUser(@PathVariable userId: Int, @RequestBody createPostRequest: CreatePostRequest): CreatePostResponse {
         return postService.createPostForUser(userId, createPostRequest)
     }
 

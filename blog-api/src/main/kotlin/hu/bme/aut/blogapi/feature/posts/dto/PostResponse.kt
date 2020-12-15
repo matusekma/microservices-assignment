@@ -9,4 +9,4 @@ data class PostResponse(val id: String,
                         val createdAt: LocalDateTime,
                         val updatedAt: LocalDateTime,
                         val isArchived: Boolean,
-                        val userId: String)
+                        val userId: Int)

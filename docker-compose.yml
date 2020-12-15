@@ -24,6 +24,7 @@ services:
     environment: 
       DB_HOST: mongo
       PROFANITY_SERVICE_URL: http://profanity-filter:80
+      USER_SERVICE_URL: http://user-api:8080
     depends_on: 
       - mongo
     networks:

@@ -27,7 +27,7 @@ fun Post.toPostResponse(): PostResponse {
     )
 }
 
-fun CreatePostRequest.toPost(userId: String): Post {
+fun CreatePostRequest.toPost(userId: Int): Post {
     return Post(
             title = this.title,
             content = this.content,

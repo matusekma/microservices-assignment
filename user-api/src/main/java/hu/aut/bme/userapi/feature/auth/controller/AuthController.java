@@ -1,4 +1,4 @@
-package hu.aut.bme.userapi.feature.controller;
+package hu.aut.bme.userapi.feature.auth.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

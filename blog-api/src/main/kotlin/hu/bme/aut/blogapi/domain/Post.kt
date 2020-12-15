@@ -13,4 +13,4 @@ data class Post(@Id var id: String? = null,
                 var createdAt: LocalDateTime,
                 var updatedAt: LocalDateTime,
                 var isArchived: Boolean,
-                var userId: String)
+                var userId: Int)

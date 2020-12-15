@@ -6,6 +6,7 @@ import hu.bme.aut.blogapi.feature.posts.dto.UpdatePostRequest
 import java.time.LocalDateTime
 
 const val mockId = "123"
+const val mockUserId = 123
 
 fun getMockPost(): Post =
         Post(
@@ -15,7 +16,7 @@ fun getMockPost(): Post =
                 createdAt = LocalDateTime.of(2020, 1, 1, 12, 12),
                 updatedAt = LocalDateTime.of(2020, 1, 1, 12, 30),
                 isArchived = false,
-                userId = mockId)
+                userId = mockUserId)
 
 fun getMockUpdatePostRequestWithoutIsArchived(): UpdatePostRequest =
         UpdatePostRequest(

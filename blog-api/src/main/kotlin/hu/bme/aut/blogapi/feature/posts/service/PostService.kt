@@ -10,9 +10,9 @@ import org.springframework.data.domain.Pageable
 
 interface PostService {
     fun getPostById(id: String): PostResponse
-    fun findAllPostsByUserPaged(userId: String, isArchived: Boolean, pageable: Pageable): Page<PostResponse>
+    fun findAllPostsByUserPaged(userId: Int, isArchived: Boolean, pageable: Pageable): Page<PostResponse>
     fun findAllPostsPaged(isArchived: Boolean, pageable: Pageable): Page<PostResponse>
-    fun createPostForUser(userId: String, createPostRequest: CreatePostRequest): CreatePostResponse
+    fun createPostForUser(userId: Int, createPostRequest: CreatePostRequest): CreatePostResponse
     fun deletePostById(id: String)
     fun updatePost(id: String, updatePostRequest: UpdatePostRequest): PostResponse
     fun toggleIsArchivedForPost(id: String): PostResponse

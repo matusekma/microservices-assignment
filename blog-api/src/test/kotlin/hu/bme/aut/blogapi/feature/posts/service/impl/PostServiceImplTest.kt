@@ -7,8 +7,8 @@ import hu.bme.aut.blogapi.feature.posts.dto.PostResponse
 import hu.bme.aut.blogapi.feature.posts.dto.toPost
 import hu.bme.aut.blogapi.feature.posts.service.PostService
 import hu.bme.aut.blogapi.feature.posts.service.ProfanityFilterService
+import hu.bme.aut.blogapi.feature.users.service.UserService
 import hu.bme.aut.blogapi.repository.PostRepository
-import hu.bme.aut.blogapi.repository.UserRepository
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.BeforeEach
@@ -16,7 +16,6 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyString
-import org.mockito.Mockito
 import org.mockito.Mockito.*
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -27,15 +26,15 @@ class PostServiceTest {
     private lateinit var postService: PostService
     private lateinit var profanityFilterService: ProfanityFilterService
     private lateinit var postRepository: PostRepository
-    private lateinit var userRepository: UserRepository
+    private lateinit var userService: UserService
 
     @BeforeEach
     internal fun setUp() {
         postRepository = mock(PostRepository::class.java)
-        userRepository = mock(UserRepository::class.java)
+        userService = mock(UserService::class.java)
         profanityFilterService = mock(ProfanityFilterServiceImpl::class.java)
         `when`(profanityFilterService.filter(anyString())).thenAnswer { it.arguments[0] }
-        postService = PostServiceImpl(postRepository, userRepository, profanityFilterService)
+        postService = PostServiceImpl(postRepository, userService, profanityFilterService)
     }
 
     @Test
@@ -76,11 +75,11 @@ class PostServiceTest {
         val mockPost = getMockPost()
         val mockPost1 = mockPost.copy(id = "124")
         val mockPage = PageImpl(listOf(mockPost, mockPost1))
-        Mockito.`when`(postRepository.findAllByUserIdAndIsArchivedIs(mockId, false, PageRequest.of(0, 2))).thenReturn(mockPage)
+        `when`(postRepository.findAllByUserIdAndIsArchivedIs(mockUserId, false, PageRequest.of(0, 2))).thenReturn(mockPage)
 
-        val postResponsePage = postService.findAllPostsByUserPaged(mockId, false, PageRequest.of(0, 2))
+        val postResponsePage = postService.findAllPostsByUserPaged(mockUserId, false, PageRequest.of(0, 2))
 
-        verify(postRepository).findAllByUserIdAndIsArchivedIs(mockId, false, PageRequest.of(0, 2))
+        verify(postRepository).findAllByUserIdAndIsArchivedIs(mockUserId, false, PageRequest.of(0, 2))
         assertEquals(mockPage.totalElements, postResponsePage.totalElements)
         assertEquals(mockPage.numberOfElements, postResponsePage.numberOfElements)
         mockPage.zip(postResponsePage).forEach { (expected, actual) -> assertPostResponse(expected, actual) }
@@ -149,10 +148,10 @@ class PostServiceTest {
     @Test
     internal fun `test post creation`() {
         val mockCreatePostRequest = getMockCreatePostRequest()
-        val mockUserId = "456"
+        val mockUserId = 456
         val mockPostToBeInserted = mockCreatePostRequest.toPost(mockUserId)
-        Mockito.`when`(userRepository.existsById(mockUserId)).thenReturn(true)
-        Mockito.`when`(postRepository.insert(any(Post::class.java)))
+        `when`(userService.existsById(mockUserId)).thenReturn(true)
+        `when`(postRepository.insert(any(Post::class.java)))
                 .thenReturn(mockPostToBeInserted.copy(id = mockId))
 
         val createPostResponse = postService.createPostForUser(mockUserId, mockCreatePostRequest)
